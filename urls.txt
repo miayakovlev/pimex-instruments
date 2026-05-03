@@ -1,0 +1,4 @@
+# По одному URL detail.php или коду инструмента в строке
+PC36KOB062F
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=ORKNKII063S
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=ORKNUFM060F

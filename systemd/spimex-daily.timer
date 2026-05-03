@@ -1,0 +1,12 @@
+[Unit]
+Description=Ежедневная выгрузка SPIMEX в 13:20 по Москве
+
+[Timer]
+# Время задаётся в часовой зоне Europe/Moscow (см. systemd.timer Timezone или суффикс в OnCalendar).
+OnCalendar=*-*-* 13:20:00 Europe/Moscow
+AccuracySec=1min
+Persistent=true
+Unit=spimex-daily.service
+
+[Install]
+WantedBy=timers.target

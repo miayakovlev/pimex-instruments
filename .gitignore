@@ -1,0 +1,12 @@
+.env
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+.venv/
+
+# Сгенерированные выгрузки (на сервере создаются заново)
+/spimex_instruments.csv
+/spimex_mail_test.csv
+/spimex_test_run.csv
+

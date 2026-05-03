@@ -1,0 +1,12 @@
+[Unit]
+Description=Выгрузка SPIMEX: CSV и почта
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@INSTALL_ROOT@
+EnvironmentFile=-@INSTALL_ROOT@/.env
+ExecStart=@INSTALL_ROOT@/run_spimex_daily.sh
+Nice=10
+__EXTRA_SERVICE_LINES__

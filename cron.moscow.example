@@ -1,0 +1,6 @@
+# Установка: crontab -e и вставить (пути замените на свои):
+#
+# CRON_TZ задаёт календарь и время триггера под Москву на любом сервере (GNU cron).
+
+CRON_TZ=Europe/Moscow
+20 13 * * * /opt/spimex-instruments/run_spimex_daily.sh >> /opt/spimex-instruments/cron.log 2>&1
