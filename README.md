@@ -2,7 +2,7 @@
 
 Небольшой набор скриптов для **автоматической выгрузки данных** с публичных карточек инструментов **рынка нефтепродуктов** Санкт-Петербургской международной товарно-сырьевой биржи ([spimex.com](https://spimex.com/)): по списку кодов или полных ссылок вида `detail.php?code=...` формируется **единый CSV**, при необходимости файл **пересылается по электронной почте** (SMTP). На сервере Linux расписание задаётся через **systemd timer** (раз в сутки в **13:20 по Москве**) или через **cron**.
 
-Подробная установка и эксплуатация: **[INSTALL.md](INSTALL.md)**.
+**Репозиторий:** [github.com/miayakovlev/pimex-instruments](https://github.com/miayakovlev/pimex-instruments) — установка сводится к `git clone` и настройке `.env`; пошагово в **[INSTALL.md](INSTALL.md)**.
 
 ## Задача
 
@@ -46,7 +46,7 @@
 
 ## Быстрый ручной запуск
 
-Из каталога проекта после создания виртуального окружения (см. [INSTALL.md](INSTALL.md)):
+На чистую машину: клонируйте репозиторий → `venv` → `requirements.txt`, как в [INSTALL.md](INSTALL.md). В каталоге проекта:
 
 ```bash
 .venv/bin/python spimex_export.py -f urls.txt -o spimex_instruments.csv
@@ -63,9 +63,7 @@ set -a && source .env && set +a
 
 ## Расписание на сервере
 
-Рекомендуемый вариант: **`./install_background.sh`** один раз ставит systemd timer по **Europe/Moscow, 13:20**. Вариант без systemd — **`cron.moscow.example`**.
-
-Таймер каждый день выполняет `run_spimex_daily.sh`, который читает `urls.txt`, обновляет CSV и отправляет почту при настроенных переменных в `.env`.
+Раз в сутки в **13:20 МСК** вызывается **`run_spimex_daily.sh`** (обновление CSV и почта из `.env`). Установка таймера: **`install_background.sh`**, см. **[INSTALL.md](INSTALL.md)**; без systemd — **`cron.moscow.example`**.
 
 ## Ограничения и юридическая сторона
 
