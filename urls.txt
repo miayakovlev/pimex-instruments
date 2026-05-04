@@ -2,3 +2,10 @@
 PC36KOB062F
 https://spimex.com/markets/oil_products/instruments/list/detail.php?code=ORKNKII063S
 https://spimex.com/markets/oil_products/instruments/list/detail.php?code=ORKNUFM060F
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCOTKII063S
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCTOOSN063F
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCT9NVY060F
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCT9SVA060J
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCFANVY060F
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=PCFORYY010A
+https://spimex.com/markets/oil_products/instruments/list/detail.php?code=JET-NVY065F
