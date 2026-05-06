@@ -17,11 +17,33 @@
 
 Скрипт — **Python 3.9+**, зависимости ставятся в **виртуальное окружение** (`venv`). На ОС нужны только базовые инструменты.
 
-### Debian / Ubuntu
+### Сначала: какой менеджер пакетов у системы?
+
+Команды из инструкций для **Fedora/RHEL** (`dnf`), **CentOS** (`yum`), **openSUSE** (`zypper`) **не работают** на **Debian/Ubuntu** — там свой менеджер. Перед установкой имеет смысл посмотреть дистрибутив и то, какие программы уже есть:
+
+```bash
+cat /etc/os-release
+command -v apt apt-get apk pacman yum dnf microdnf zypper 2>/dev/null
+```
+
+- если в выводе есть **`apt`** или **`apt-get`** — используйте подраздел **Debian/Ubuntu** ниже (это самый частый случай при ошибках вида `dnf: command not found`);
+- если есть **`apk`** — **Alpine**;
+- если **`pacman`** — **Arch** / производные.
+
+**Если нет ни `apt`, ни `apk`, ни `pacman`, ни rpm‑семейства** — возможно образ вроде **NixOS**, **Gentoo** или урезанный контейнер: смотрите документацию образа или поставьте обычный серверный **Ubuntu LTS / Debian** / **AlmaLinux**, где известны команды ниже.
+
+### Debian / Ubuntu (`apt`)
 
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip git ca-certificates
+```
+
+Если команды `apt` нет, но есть только **`apt-get`** (минимальный контейнер):
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3 python3-venv python3-pip git ca-certificates
 ```
 
 Проверка версии Python:
@@ -30,13 +52,41 @@ sudo apt install -y python3 python3-venv python3-pip git ca-certificates
 python3 --version   # должно быть 3.9 или новее
 ```
 
-### Fedora / RHEL / AlmaLinux / Rocky (dnf)
+### Alpine Linux (`apk`)
+
+```bash
+sudo apk add python3 py3-pip git ca-certificates
+```
+
+Если позже `python3 -m venv` пожалуется на отсутствие модуля, доустановите пакет виртуальных окружений для вашей версии Alpine (имя может быть **`py3-virtualenv`** или **`python3-dev`** — см. сообщение об ошибке / wiki Alpine).
+
+### Arch Linux (`pacman`)
+
+```bash
+sudo pacman -Syu --needed --noconfirm python python-pip git ca-certificates
+```
+
+### Fedora / RHEL 8+ / AlmaLinux / Rocky — `dnf`
 
 ```bash
 sudo dnf install -y python3 python3-pip git ca-certificates
 ```
 
-На старых RHEL может понадобиться модуль Python (`dnf module enable python39` и т.д.) — главное, чтобы `python3` был **≥ 3.9**.
+При необходимости на RHEL включите модуль Python (`dnf module enable python39` и т.п.) — главное, чтобы `python3` был **≥ 3.9`.
+
+### CentOS 7 / старый RHEL с `yum` (без `dnf`)
+
+```bash
+sudo yum install -y python3 python3-pip git ca-certificates
+```
+
+На CentOS 7 штатный `python3` может быть **3.6** — для проекта нужен **3.9+** (отдельный пакет из SCL/IUS или сборка Python; проще поднять ВМ на **AlmaLinux 8+/9+** или **Ubuntu 22.04 LTS**).
+
+### Минимальный образ с `microdnf` (контейнеры UBI и т.п.)
+
+```bash
+sudo microdnf install -y python3 python3-pip git ca-certificates
+```
 
 ### openSUSE (zypper)
 

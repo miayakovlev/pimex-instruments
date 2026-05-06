@@ -12,7 +12,7 @@
 
 ```bash
 sudo mkdir -p /opt/pimex-instruments
-sudo chown "$USER:$USER" /opt/pimex-instruments
+sudo chown "user1:user1" /opt/pimex-instruments
 cd /opt/pimex-instruments
 git clone https://github.com/miayakovlev/pimex-instruments.git .
 python3 -m venv .venv
@@ -83,6 +83,57 @@ systemctl --user list-timers spimex-daily.timer
 (файлы репозитория и `.env` должны быть доступны этому пользователю.)
 
 Подробнее о таймере см. **`systemd/spimex-daily.timer`** (`Europe/Moscow`, 13:20). Отключить: `systemctl --user disable --now spimex-daily.timer`.
+
+#### Проверка: таймер включён («взведён») и ждёт срабатывания
+
+Команды зависят от того, ставили ли вы **user‑таймер** (по умолчанию `./install_background.sh`) или **system** (`... --system`).
+
+**Режим user** (те же вызовы `systemctl`, что после `./install_background.sh` без `--system`):
+
+```bash
+# таймер существует, включён в автозагрузке и активен (ожидание расписания)
+systemctl --user is-enabled spimex-daily.timer   # должно быть: enabled
+systemctl --user is-active spimex-daily.timer     # должно быть: active
+
+systemctl --user status spimex-daily.timer --no-pager -l
+# В блоке статуса ожидаемо: Loaded: loaded ... enabled;
+# Active: active (waiting) — ждёт следующего 13:20 МСК.
+
+# когда именно следующий запуск и был ли последний (колонки NEXT, LAST)
+systemctl --user list-timers spimex-daily.timer --no-pager
+```
+
+**Режим system** (ставили `./install_background.sh --system`):
+
+```bash
+sudo systemctl is-enabled spimex-daily.timer
+sudo systemctl is-active spimex-daily.timer
+sudo systemctl status spimex-daily.timer --no-pager -l
+sudo systemctl list-timers spimex-daily.timer --no-pager
+```
+
+**Приложение не «висит» постоянным процессом** — каждый раз по расписанию стартует короткая **служба** `spimex-daily.service`. Убедиться, что последний запуск прошёл (или упал с ошибкой):
+
+```bash
+# user
+systemctl --user status spimex-daily.service --no-pager -l
+journalctl --user -u spimex-daily.service -n 80 --no-pager
+
+# system
+sudo systemctl status spimex-daily.service --no-pager -l
+sudo journalctl -u spimex-daily.service -n 80 --no-pager
+```
+
+В логе ищите строки вроде `Записано строк: …` из `spimex_export.py` или сообщения об ошибке.
+
+**Если ставили user‑таймер на VPS только по SSH:** без сеанса пользователя user‑`systemd` по умолчанию не живёт — проверьте **linger**:
+
+```bash
+loginctl show-user "$USER" -p Linger
+# нужно Linger=yes; иначе один раз: sudo loginctl enable-linger "$USER"
+```
+
+**cron:** смотрите `crontab -l` и логи cron (`grep spimex` в `/var/log/syslog` или где принято в вашем дистрибутиве).
 
 **cron** — пример строки см. **`cron.moscow.example`**.
 
